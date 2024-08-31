@@ -7,7 +7,7 @@ require 'nokogiri'
 require 'charlock_holmes'
 require 'unicode_utils'
 
-FILE_PATH = '/home/haturatu/Downloads/mstdon/test'
+FILE_PATH = '/Your/URLs/list/file'
 RESULT_FILE = 'Result'
 OTHER_ERROR_FILE = 'Other'
 CONCURRENCY = 10
