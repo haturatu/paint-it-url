@@ -7,10 +7,10 @@ require 'nokogiri'
 require 'charlock_holmes'
 require 'unicode_utils'
 
-FILE_PATH = '/Your/URLs/list/file'
-RESULT_FILE = 'Result'
-OTHER_ERROR_FILE = 'Other'
-CONCURRENCY = 10
+$FILE_PATH = './ok'
+$RESULT_FILE = 'Result'
+$OTHER_ERROR_FILE = 'Other'
+$CONCURRENCY = 10
 
 def is_garbled?(text)
   text.include?('�') || text.chars.any? { |char| char.ord > 0xFFFF }
@@ -41,7 +41,7 @@ def get_page_title(url)
     begin
       text = content.force_encoding(encoding).encode('UTF-8', invalid: :replace, undef: :replace)
       doc = Nokogiri::HTML(text)
-      title = doc.at_css('title')&.text&.strip || 'No title found'
+      title = doc.at_css('title')&.text&.strip || 'タイトルが見つかりません'
       break unless is_garbled?(title)
     rescue
       next
@@ -53,26 +53,26 @@ def get_page_title(url)
     encoding = detection[:encoding] || 'UTF-8'
     text = content.force_encoding(encoding).encode('UTF-8', invalid: :replace, undef: :replace)
     doc = Nokogiri::HTML(text)
-    title = doc.at_css('title')&.text&.strip || 'No title found'
+    title = doc.at_css('title')&.text&.strip || 'タイトルが見つかりません'
     if is_garbled?(title)
       title = url.split('/').last.gsub('-', ' ').gsub('_', ' ').capitalize
-      title = 'Error: Unable to extract title' if title.empty?
+      title = 'エラー: タイトルを抽出できません' if title.empty?
     end
   end
 
   [url, clean_title(title)]
 rescue => e
-  [url, "Error: #{e.class} - #{e.message}"]
+  [url, "エラー: #{e.class} - #{e.message}"]
 end
 
 def process_url(url)
   url, title = get_page_title(url)
-  if title.start_with?('Error:')
-    File.open(OTHER_ERROR_FILE, 'a') { |f| f.puts "URL: #{url}\nError: #{title}\n\n" }
+  if title.start_with?('エラー:')
+    File.open($OTHER_ERROR_FILE, 'a') { |f| f.puts "URL: #{url}\nエラー: #{title}\n\n" }
   else
-    File.open(RESULT_FILE, 'a') { |f| f.puts "URL: #{url}\nTitle: #{title}\n\n" }
+    File.open($RESULT_FILE, 'a') { |f| f.puts "URL: #{url}\nタイトル: #{title}\n\n" }
   end
-  puts "URL: #{url}\nTitle: #{title}\n\n"
+  puts "URL: #{url}\nタイトル: #{title}\n\n"
 end
 
 def process_urls(file_path)
@@ -88,16 +88,22 @@ def process_urls(file_path)
     exit(0)
   end
 
-  Parallel.each(urls, in_threads: CONCURRENCY) do |url|
+  Parallel.each(urls, in_threads: $CONCURRENCY) do |url|
     process_url(url)
     sleep(rand(1.0..3.0))
   end
 end
 
 begin
-  process_urls(FILE_PATH)
+  process_urls($FILE_PATH)
+rescue Errno::ENOENT => e
+  puts "エラー: ファイルが見つかりません - #{e.message}"
+  exit(1)
+rescue Errno::EACCES => e
+  puts "エラー: ファイルへのアクセス権限がありません - #{e.message}"
+  exit(1)
 rescue => e
-  puts "エラーが発生しました: #{e.message}"
+  puts "予期せぬエラーが発生しました: #{e.message}"
   puts e.backtrace
   exit(1)
 end
