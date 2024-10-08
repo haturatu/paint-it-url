@@ -7,7 +7,7 @@ require 'nokogiri'
 require 'charlock_holmes'
 require 'unicode_utils'
 
-$FILE_PATH = './ok'
+$FILE_PATH = '/Your/URLs/list/file'
 $RESULT_FILE = 'Result'
 $OTHER_ERROR_FILE = 'Other'
 $CONCURRENCY = 10
@@ -17,7 +17,7 @@ def is_garbled?(text)
 end
 
 def clean_title(title)
-  title = title.chars.reject { |ch| UnicodeUtils.general_category(ch).start_with?('C') && !['(', ')', '[', ']', '{', '}', '【', '】', '「', '」', '（' ,'）' ].include?(ch) }.join
+  title = title.chars.reject { |ch| UnicodeUtils.general_category(ch).start_with?('C') && !['(', ')', '[', ']', '{', '}', '【', '】', '【', '】', '「', '」', '（' ,'）' ].include?(ch) }.join
   title = UnicodeUtils.nfkc(title)
   title = title.chars.select(&:valid_encoding?).join
   title.strip

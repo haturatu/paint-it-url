@@ -3,7 +3,7 @@
 def convert_to_markdown(input_file, output_file)
   content = File.read(input_file, encoding: 'utf-8')
 
-  pairs = content.scan(/URL: (.*?)\nTitle: (.*?)\n/m)
+  pairs = content.scan(/URL: (.*?)\nタイトル: (.*?)\n/m)
 
   File.open(output_file, 'w', encoding: 'utf-8') do |f|
     pairs.each do |url, title|
@@ -14,7 +14,7 @@ def convert_to_markdown(input_file, output_file)
       title = url.split('/')[-1] if title.strip.empty?
 
       # 特殊文字をエスケープ
-      title = title.gsub('[', '\\[').gsub(']', '\\]')
+      title = title.gsub(/[\[\]\(\)\{\}]/) { |m| "\\#{m}" }
 
       # md形式のリンクを作成
       markdown_link = "[#{title}](#{url})\n\n"
