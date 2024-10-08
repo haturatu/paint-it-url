@@ -70,7 +70,7 @@ def process_url(url)
   if title.start_with?('エラー:')
     File.open($OTHER_ERROR_FILE, 'a') { |f| f.puts "URL: #{url}\nエラー: #{title}\n\n" }
   else
-    File.open($RESULT_FILE, 'a') { |f| f.puts "URL: #{url}\nタイトル: #{title}\n\n" }
+    File.open($RESULT_FILE, 'a') { |f| f.puts "URL: #{url}\nTitle: #{title}\n\n" }
   end
   puts "URL: #{url}\nタイトル: #{title}\n\n"
 end

@@ -3,7 +3,7 @@
 def convert_to_markdown(input_file, output_file)
   content = File.read(input_file, encoding: 'utf-8')
 
-  pairs = content.scan(/URL: (.*?)\nタイトル: (.*?)\n/m)
+  pairs = content.scan(/URL: (.*?)\nTitle: (.*?)\n/m)
 
   File.open(output_file, 'w', encoding: 'utf-8') do |f|
     pairs.each do |url, title|
