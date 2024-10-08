@@ -6,6 +6,19 @@ URLからページタイトルを取得、出力します。
 ```
 bundle install --path ~/.gem
 ```
+## 設定
+設定は`geturl.rb`の以下で行います。
+```
+FILE_PATH = '/Your/URLs/list/file'
+RESULT_FILE = 'Result'
+OTHER_ERROR_FILE = 'Other'
+CONCURRENCY = 10
+```
+`FILE_PATH`以外は変更する必要はあまりありませんが、`RESULT_FILE`を変更する場合は`md.rb`での設定と対になっています。
+```
+convert_to_markdown('Result', 'Result.md')
+```
+そのため、`RESULT_FILE`を変更した場合ここも変えないといけません。  
 
 ## geturl.rb
 入力ファイルは以下のような形式とします。
