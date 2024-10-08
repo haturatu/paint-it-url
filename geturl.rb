@@ -17,7 +17,7 @@ def is_garbled?(text)
 end
 
 def clean_title(title)
-  title = title.chars.reject { |ch| UnicodeUtils.general_category(ch).start_with?('C') }.join
+  title = title.chars.reject { |ch| UnicodeUtils.general_category(ch).start_with?('C') && !['(', ')', '[', ']', '{', '}', '【', '】', '「', '」', '（' ,'）' ].include?(ch) }.join
   title = UnicodeUtils.nfkc(title)
   title = title.chars.select(&:valid_encoding?).join
   title.strip
@@ -76,12 +76,28 @@ def process_url(url)
 end
 
 def process_urls(file_path)
+  unless File.exist?(file_path)
+    puts "エラー: 指定されたファイル '#{file_path}' が見つかりません。"
+    exit(1)
+  end
+
   urls = File.readlines(file_path).map(&:strip).reject(&:empty?)
   
+  if urls.empty?
+    puts "警告: ファイル '#{file_path}' にURLが含まれていません。"
+    exit(0)
+  end
+
   Parallel.each(urls, in_threads: CONCURRENCY) do |url|
     process_url(url)
     sleep(rand(1.0..3.0))
   end
 end
 
-process_urls(FILE_PATH)
+begin
+  process_urls(FILE_PATH)
+rescue => e
+  puts "エラーが発生しました: #{e.message}"
+  puts e.backtrace
+  exit(1)
+end
