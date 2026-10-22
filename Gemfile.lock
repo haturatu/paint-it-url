@@ -2,26 +2,38 @@ GEM
   remote: https://rubygems.org/
   specs:
     charlock_holmes (0.7.9)
-    faraday (1.2.0)
-      multipart-post (>= 1.2, < 3)
-      ruby2_keywords
-    multipart-post (2.4.1)
-    nokogiri (1.16.7-aarch64-linux)
+    faraday (2.15.0)
+      faraday-net_http (>= 2.0, < 3.6)
+      json
+      logger
+    faraday-net_http (3.5.0)
+      net-http (~> 0.5)
+    json (3.1.0)
+    logger (1.7.0)
+    mini_portile2 (2.8.9)
+    net-http (0.10.0)
+      net-protocol (>= 0.3.0)
+      uri (>= 0.11.1)
+    net-protocol (0.4.0)
+      timeout
+    nokogiri (1.19.4)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.16.7-arm-linux)
+    nokogiri (1.19.4-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.16.7-arm64-darwin)
+    nokogiri (1.19.4-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.16.7-x86-linux)
+    nokogiri (1.19.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.7-x86_64-darwin)
+    nokogiri (1.19.4-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.7-x86_64-linux)
+    nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
-    parallel (1.26.3)
+    parallel (2.3.0)
     racc (1.8.1)
-    ruby2_keywords (0.0.5)
+    timeout (0.6.1)
     unicode_utils (1.4.0)
+    uri (1.1.2)
 
 PLATFORMS
   aarch64-linux
@@ -39,4 +51,4 @@ DEPENDENCIES
   unicode_utils
 
 BUNDLED WITH
-   2.5.18
+   2.7.1
